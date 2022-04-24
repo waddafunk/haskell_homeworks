@@ -69,10 +69,36 @@ parseMessage (h:t)
   | h == 'W' && checkSpace(head(t):[]) = notError h (tail t)
   | otherwise = Unknown(h:t)
 
+--Checks if string is LogMessage identifier
+isIdentifier :: String -> Bool
+isIdentifier s = s `elem` ["E","W","I"]  
+
+--Returns Log arguments as a string from a list of words without checking
+splitSingleLog :: [String] -> (String, [String])
+splitSingleLog [] = ([], [])
+splitSingleLog (h:t)
+  | isIdentifier h = ([], h:t)
+  | otherwise = ((h ++ " " ++  fst(splitSingleLog(t))), snd(splitSingleLog(t)))
+
+--Returns Log arguments as a string from a list of words checking if the first is a LogMessage identifier
+getSingleLog :: String -> (String, [String])
+getSingleLog [] = ([], [])
+getSingleLog s
+  | isIdentifier(head(words(s))) = (
+        (head(words(s)) ++ " " ++ fst(splitSingleLog(tail(words(s))))),
+        (snd(splitSingleLog(tail(words(s)))))
+      )
+  | otherwise = ([], [])
+
+--Parse a LogMessage string
+parse :: String -> [LogMessage]
+parse [] = []
+parse s = (parseMessage(fst(getSingleLog(s)))):(parse(unwords(snd(getSingleLog(s)))))
+
 --Get the LogMessage string
 getString :: LogMessage -> String
 getString (LogMessage _ _ n) = n
 getString (Unknown n) = n
 
 someFunc :: IO ()
-someFunc = putStrLn(getString(parseMessage("E 42 69 hello world")))
+someFunc = putStrLn(getString(head(parse("I 6 Completed armadillo processing I 1 Nothing to report E 99 10 Flange failed! I 4 Everything normal I 11 Initiating self-destruct sequence E 70 3 Way too many pickles E 65 8 Bad pickle-flange interaction detected W 5 Flange is due for a check-up I 7 Out for lunch, back in two time steps E 20 2 Too many pickles I 9 Back from lunch"))))

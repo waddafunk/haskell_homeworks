@@ -25,7 +25,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Homework1
   other-modules:
       Paths_homeworks
   hs-source-dirs:

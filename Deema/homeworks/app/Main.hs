@@ -3,4 +3,4 @@ module Main where
 import Homework1
 
 main :: IO ()
-main = someFunc
+main = putStrLn "run the exercises with ghci"

@@ -65,3 +65,6 @@ packages:
 #
 # Allow a newer minor version of GHC than the snapshot specifies
 # compiler-check: newer-minor
+
+# haskell-server bugfix for ghc 9.0.2
+system-ghc: true

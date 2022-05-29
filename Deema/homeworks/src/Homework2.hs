@@ -28,6 +28,7 @@ insert message Leaf = Node Leaf message Leaf
 insert msg@(LogMessage _ ts _) (Node left msg'@(LogMessage _ ts' _) right)
   | ts <= ts' = Node (insert msg left) msg' right
   | otherwise = Node left msg' (insert msg right)
+insert _ tree = tree
 
 -- exercise 3
 build :: [LogMessage] -> MessageTree
